@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { ElementInfo, SnippetData } from './types';
 import {
   SourceSection,
@@ -28,6 +29,8 @@ export function InspectorPanel({
   snippet: SnippetData | null;
   snippetLoading: boolean;
 }) {
+  const [expanded, setExpanded] = useState(false);
+
   return (
     <motion.div
       ref={(node) => {
@@ -39,11 +42,11 @@ export function InspectorPanel({
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: 4 }}
       transition={{ duration: 0.15 }}
-      className={`fixed z-[95] bg-white rounded-xl shadow-xl border border-[#E5E7EB] overflow-hidden${isDragging ? '' : ' cursor-default'}`}
+      className={`fixed z-[95] bg-[#161B22] rounded-lg shadow-[0_8px_32px_rgba(0,0,0,0.4)] border border-[#30363D] overflow-hidden${isDragging ? '' : ' cursor-default'}`}
       style={{
         top: panelPos.y,
         left: panelPos.x,
-        width: 380,
+        width: 400,
         maxHeight: 'calc(100vh - 32px)',
         userSelect: isDragging ? 'none' : 'auto',
       }}
@@ -52,18 +55,23 @@ export function InspectorPanel({
       {/* Header (drag handle) */}
       <div
         onMouseDown={onDragStart}
-        className={`flex items-center justify-between px-4 py-2.5 bg-[#F9FAFB] border-b border-[#E5E7EB] select-none${isDragging ? ' cursor-grabbing' : ' cursor-grab'}`}
+        className={`flex items-center justify-between px-4 py-2.5 bg-[#1C2128] border-b border-[#30363D] select-none${isDragging ? ' cursor-grabbing' : ' cursor-grab'}`}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-[#6366F1] text-white text-[10px] font-bold flex-shrink-0">
+          <span className="inline-flex items-center justify-center w-5 h-5 rounded bg-[#1F6FEB] text-[#F0F6FC] text-[10px] font-bold flex-shrink-0">
             &lt;/&gt;
           </span>
-          <span className="text-sm font-semibold text-[#1A1F36] truncate">
+          <span className="text-sm font-semibold text-[#E6EDF3] truncate">
             {elementInfo.tag}
-            {elementInfo.id && <span className="text-[#6366F1]">#{elementInfo.id}</span>}
+            {elementInfo.id && <span className="text-[#58A6FF]">#{elementInfo.id}</span>}
           </span>
+          {elementInfo.source && (
+            <span className="text-[11px] text-[#6E7681] font-mono truncate hidden sm:inline">
+              {elementInfo.source.file.split('/').pop()}:{elementInfo.source.line}
+            </span>
+          )}
         </div>
-        <div className="flex items-center gap-1 flex-shrink-0">
+        <div className="flex items-center gap-0.5 flex-shrink-0">
           {elementInfo.source && (
             <button
               onClick={() => {
@@ -74,7 +82,7 @@ export function InspectorPanel({
                 ].filter(Boolean).join('\n');
                 navigator.clipboard.writeText(lines).catch(() => {});
               }}
-              className="p-1 rounded hover:bg-[#EEF2FF] hover:text-[#6366F1] transition-colors cursor-pointer"
+              className="p-1.5 rounded hover:bg-[#21262D] text-[#8B949E] hover:text-[#58A6FF] transition-colors cursor-pointer"
               aria-label="Copy task context"
               title="Copy task context (file, tag, text)"
             >
@@ -93,7 +101,7 @@ export function InspectorPanel({
                 const { file, line } = elementInfo.source!;
                 window.open(`vscode://file/${file}:${line}`, '_self');
               }}
-              className="p-1 rounded hover:bg-[#EEF2FF] hover:text-[#6366F1] transition-colors cursor-pointer"
+              className="p-1.5 rounded hover:bg-[#21262D] text-[#8B949E] hover:text-[#58A6FF] transition-colors cursor-pointer"
               aria-label="Open in VS Code"
               title="Open in VS Code"
             >
@@ -103,24 +111,41 @@ export function InspectorPanel({
               </svg>
             </button>
           )}
+          {elementInfo.source && (
+            <button
+              onClick={() =>
+                navigator.clipboard
+                  .writeText(`${elementInfo.source!.file}:${elementInfo.source!.line}`)
+                  .catch(() => {})
+              }
+              className="p-1.5 rounded hover:bg-[#21262D] text-[#8B949E] hover:text-[#58A6FF] transition-colors cursor-pointer"
+              aria-label="Copy file path"
+              title="Copy file:line"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+              </svg>
+            </button>
+          )}
+          <div className="w-px h-4 bg-[#30363D] mx-0.5" />
           <button
-            onClick={() =>
-              navigator.clipboard
-                .writeText(`${elementInfo.source!.file}:${elementInfo.source!.line}`)
-                .catch(() => {})
-            }
-            className="p-1 rounded hover:bg-[#E5E7EB] transition-colors cursor-pointer"
-            aria-label="Copy file path"
-            title="Copy file:line"
+            onClick={() => setExpanded((v) => !v)}
+            className="p-1.5 rounded hover:bg-[#21262D] text-[#8B949E] hover:text-[#E6EDF3] transition-colors cursor-pointer"
+            aria-label={expanded ? 'Свернуть детали' : 'Развернуть детали'}
+            title={expanded ? 'Свернуть' : 'Детали'}
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+            <svg
+              width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+              style={{ transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+            >
+              <polyline points="6 9 12 15 18 9" />
             </svg>
           </button>
           <button
             onClick={onClose}
-            className="p-1 rounded hover:bg-[#E5E7EB] transition-colors cursor-pointer"
+            className="p-1.5 rounded hover:bg-[#DA3633]/20 text-[#8B949E] hover:text-[#F85149] transition-colors cursor-pointer"
             aria-label="Закрыть панель"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -131,19 +156,31 @@ export function InspectorPanel({
         </div>
       </div>
 
-      {/* Scrollable content */}
-      <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100vh - 120px)' }}>
-        {elementInfo.source && <SourceSection source={elementInfo.source} />}
-        {elementInfo.classes && <ClassesSection classes={elementInfo.classes} />}
-        {elementInfo.text && <TextSection text={elementInfo.text} />}
-        {elementInfo.cssPath && <CssPathSection cssPath={elementInfo.cssPath} />}
-        <HtmlSection outerHTML={elementInfo.outerHTML} />
-        <StylesSection styles={elementInfo.computedStyles} />
-        {elementInfo.boxModel && <BoxModelSection boxModel={elementInfo.boxModel} />}
-        {elementInfo.source && (
-          <SnippetSection source={elementInfo.source} snippet={snippet} snippetLoading={snippetLoading} />
+      {/* Collapsible content */}
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            <div className="overflow-y-auto custom-scrollbar" style={{ maxHeight: 'calc(100vh - 120px)' }}>
+              {elementInfo.source && <SourceSection source={elementInfo.source} />}
+              {elementInfo.classes && <ClassesSection classes={elementInfo.classes} />}
+              {elementInfo.text && <TextSection text={elementInfo.text} />}
+              {elementInfo.cssPath && <CssPathSection cssPath={elementInfo.cssPath} />}
+              <HtmlSection outerHTML={elementInfo.outerHTML} />
+              <StylesSection styles={elementInfo.computedStyles} />
+              {elementInfo.boxModel && <BoxModelSection boxModel={elementInfo.boxModel} />}
+              {elementInfo.source && (
+                <SnippetSection source={elementInfo.source} snippet={snippet} snippetLoading={snippetLoading} />
+              )}
+            </div>
+          </motion.div>
         )}
-      </div>
+      </AnimatePresence>
     </motion.div>
   );
 }

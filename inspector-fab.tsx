@@ -18,10 +18,10 @@ export function InspectorFab({
           fixed bottom-6 right-6 z-[90] w-12 h-12 rounded-full
           flex items-center justify-center
           shadow-lg transition-all duration-200 cursor-pointer
-          focus:outline-none focus-visible:ring-2 focus-visible:ring-[#6366F1] focus-visible:ring-offset-2
+          focus:outline-none focus-visible:ring-2 focus-visible:ring-[#58A6FF] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0D1117]
           ${active
-            ? 'bg-[#6366F1] text-white shadow-[#6366F1]/30'
-            : 'bg-[#1A1F36] text-white/80 hover:bg-[#2D3250] hover:text-white shadow-black/20'
+            ? 'bg-[#1F6FEB] text-[#F0F6FC] shadow-[#1F6FEB]/30'
+            : 'bg-[#21262D] text-[#E6EDF3]/80 hover:bg-[#30363D] hover:text-[#E6EDF3] shadow-black/40'
           }
         `}
         whileHover={{ scale: 1.08 }}
@@ -41,8 +41,8 @@ export function InspectorFab({
             <path d="m5 5 0 14" />
           </svg>
         )}
-        <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#6366F1] text-white text-[9px] font-bold flex items-center justify-center leading-none select-none">
-          3.1
+        <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#58A6FF] text-[#0D1117] text-[9px] font-bold flex items-center justify-center leading-none select-none">
+          3.2
         </span>
       </motion.button>
 
@@ -52,7 +52,7 @@ export function InspectorFab({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
-            className="fixed bottom-20 right-6 z-[90] bg-[#1A1F36] text-white text-xs px-3 py-1.5 rounded-lg shadow-lg whitespace-nowrap pointer-events-none"
+            className="fixed bottom-20 right-6 z-[90] bg-[#21262D] text-[#E6EDF3] text-xs px-3 py-1.5 rounded-lg shadow-lg border border-[#30363D] whitespace-nowrap pointer-events-none"
           >
             Кликните на элемент для инспекции
           </motion.div>

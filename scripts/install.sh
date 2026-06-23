@@ -7,7 +7,7 @@ PROJECT_ROOT="$(cd "$INSPECTOR_DIR/../../../.." && pwd)"
 SRC_DIR="$PROJECT_ROOT/src"
 APP_DIR="$SRC_DIR/app"
 
-echo "[INSTALL] Select Element Inspector v3.1"
+echo "[INSTALL] FabInspector v3.2"
 echo "[INSTALL] Inspector dir: $INSPECTOR_DIR"
 echo "[INSTALL] Project root: $PROJECT_ROOT"
 
@@ -20,13 +20,22 @@ if ! command -v bun &>/dev/null; then
   exit 1
 fi
 
-# Проверить framer-motion в package.json
+# Проверить framer-motion
 if ! grep -q '"framer-motion"' "$PROJECT_ROOT/package.json" 2>/dev/null; then
   echo "[INSTALL] Installing framer-motion..."
   cd "$PROJECT_ROOT" && bun add framer-motion
   echo "[OK] framer-motion installed"
 else
   echo "[OK] framer-motion already installed"
+fi
+
+# Проверить react-syntax-highlighter
+if ! grep -q '"react-syntax-highlighter"' "$PROJECT_ROOT/package.json" 2>/dev/null; then
+  echo "[INSTALL] Installing react-syntax-highlighter..."
+  cd "$PROJECT_ROOT" && bun add react-syntax-highlighter
+  echo "[OK] react-syntax-highlighter installed"
+else
+  echo "[OK] react-syntax-highlighter already installed"
 fi
 
 # --- 2. Создать API-роут ---
@@ -103,11 +112,12 @@ echo ""
 echo "[INSTALL] Step 4/4: Done!"
 echo ""
 echo "============================================"
-echo " Select Element Inspector v3.1 installed!"
+echo " FabInspector v3.2 installed!"
 echo "============================================"
 echo ""
 echo " What was done:"
 echo "   - framer-motion dependency checked"
+echo "   - react-syntax-highlighter dependency checked"
 echo "   - API route: src/app/api/source/route.ts"
 echo "   - Import added to your layout/page"
 echo ""
