@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import type { ElementInfo, SnippetData, SourceInfo } from './types';
+import type { ElementInfo, SnippetData, SourceInfo, BoxModel } from './types';
 
 function findSource(el: HTMLElement): SourceInfo | null {
   let current: HTMLElement | null = el;
@@ -80,6 +80,22 @@ function getElementInfo(el: HTMLElement): ElementInfo | null {
       lineHeight: cs.lineHeight,
       width: `${Math.round(rect.width)}px`,
       height: `${Math.round(rect.height)}px`,
+    },
+    boxModel: {
+      marginTop: cs.marginTop,
+      marginRight: cs.marginRight,
+      marginBottom: cs.marginBottom,
+      marginLeft: cs.marginLeft,
+      paddingTop: cs.paddingTop,
+      paddingRight: cs.paddingRight,
+      paddingBottom: cs.paddingBottom,
+      paddingLeft: cs.paddingLeft,
+      borderTop: cs.borderTopWidth,
+      borderRight: cs.borderRightWidth,
+      borderBottom: cs.borderBottomWidth,
+      borderLeft: cs.borderLeftWidth,
+      width: cs.width,
+      height: cs.height,
     },
     source: findSource(el),
   };

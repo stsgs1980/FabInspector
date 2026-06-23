@@ -9,6 +9,7 @@ import {
   StylesSection,
   SnippetSection,
 } from './panel-sections';
+import { BoxModelSection } from './box-model-section';
 
 export function InspectorPanel({
   elementInfo,
@@ -86,6 +87,22 @@ export function InspectorPanel({
               </svg>
             </button>
           )}
+          {elementInfo.source && (
+            <button
+              onClick={() => {
+                const { file, line } = elementInfo.source!;
+                window.open(`vscode://file/${file}:${line}`, '_self');
+              }}
+              className="p-1 rounded hover:bg-[#EEF2FF] hover:text-[#6366F1] transition-colors cursor-pointer"
+              aria-label="Open in VS Code"
+              title="Open in VS Code"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="16 18 22 12 16 6" />
+                <polyline points="8 6 2 12 8 18" />
+              </svg>
+            </button>
+          )}
           <button
             onClick={() =>
               navigator.clipboard
@@ -122,6 +139,7 @@ export function InspectorPanel({
         {elementInfo.cssPath && <CssPathSection cssPath={elementInfo.cssPath} />}
         <HtmlSection outerHTML={elementInfo.outerHTML} />
         <StylesSection styles={elementInfo.computedStyles} />
+        {elementInfo.boxModel && <BoxModelSection boxModel={elementInfo.boxModel} />}
         {elementInfo.source && (
           <SnippetSection source={elementInfo.source} snippet={snippet} snippetLoading={snippetLoading} />
         )}
