@@ -1,224 +1,163 @@
-# Select Element Inspector
+# FabInspector
 
-> Визуальный инспектор элементов для Next.js приложений.
-> Версия: 3.1
+Визуальный инспектор элементов для Next.js dev mode. Плавающая FAB-кнопка с draggable панелью в GitHub Dark Theme, подсветкой синтаксиса, box-model визуализацией и интеграцией с VS Code.
 
----
+![React 19](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)
+![Next.js 15+](https://img.shields.io/badge/Next.js-15%2B-000000?style=flat-square&logo=nextdotjs)
+![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
-## Описание
+## Что делает
 
-Модуль-инспектор элементов для dev-режима. Добавляет плавающую кнопку (FAB) на страницу. При активации позволяет кликнуть на любой DOM-элемент и увидеть:
+При клике на любой DOM-элемент показывает:
 
-- Источник (файл:строка через `data-src` атрибут)
-- CSS-классы
-- Текстовое содержимое
-- CSS Path (полный DOM-селектор)
-- HTML-код элемента
+- Источник: файл и строка через `data-src` атрибут
+- CSS-классы, текст, CSS Path, HTML-код
 - Вычисленные стили (размер, шрифт, цвет)
-- Сниппет исходного кода с подсветкой строки
+- Box Model: визуальная схема margin / border / padding / content
+- Сниппет исходного кода с подсветкой синтаксиса
+- Кнопка Open in VS Code: переход к file:line в редакторе
+- Copy task context: структурированный промпт (файл + тег + текст)
 
-Панель информации **draggable** (перетаскивается за заголовок).
-
----
-
-## Зависимости
-
-| Пакет | Версия | Обязательность |
-|-------|--------|----------------|
-| `framer-motion` | >= 11.0 | Обязательно |
-| `next` | >= 15.0 | Обязательно (для API-роута) |
-| `react` | >= 19.0 | Обязательно |
-
----
+Панель по умолчанию свёрнута (только заголовок), раскрывается по клику на шеврон. Перетаскивается за заголовок.
 
 ## Установка
 
 ### Вариант A: Новый проект
 
 ```bash
-# 1. Добавить submodule
 git submodule add https://github.com/stsgs1980/FabInspector.git src/components/inspector
-
-# 2. Установить зависимости
-bun add framer-motion
-
-# 3. Запустить скрипт установки (добавит API-роут и импорт)
+bun add framer-motion react-syntax-highlighter
 bash src/components/inspector/scripts/install.sh
-
-# 4. Готово — FAB-кнопка появится на всех страницах
 ```
 
 ### Вариант B: Существующий проект
 
 ```bash
-# 1. Добавить submodule
 git submodule add https://github.com/stsgs1980/FabInspector.git src/components/inspector
-
-# 2. Установить зависимости (если framer-motion ещё нет)
-bun add framer-motion
-
-# 3. Запустить скрипт установки
+bun add framer-motion react-syntax-highlighter
 bash src/components/inspector/scripts/install.sh
-
-# 4. Скрипт обнаружит существующий layout/page и добавит импорт автоматически
-```
-
-### Ручная установка (без скриптов)
-
-```tsx
-// 1. В вашем layout.tsx или page.tsx:
-import { SelectElementFab } from '@/components/inspector';
-
-// 2. Добавить в JSX (обычно в корень return):
-<SelectElementFab />
-
-// 3. Создать API-роут src/app/api/source/route.ts
-//    Скопируйте содержимое из src/components/inspector/api-source-route.ts
-```
-
----
-
-## Удаление
-
-### Через скрипт
-
-```bash
-bash src/components/inspector/scripts/uninstall.sh
 ```
 
 Скрипт автоматически:
-- Удалит импорт `SelectElementFab` из файла, куда он был добавлен
-- Удалит API-роут `src/app/api/source/route.ts`
-- Удалит submodule
+- Проверяет зависимости (framer-motion, react-syntax-highlighter)
+- Создаёт API-роут `src/app/api/source/route.ts`
+- Вставляет `import` и `<SelectElementFab />` в layout.tsx или page.tsx
 
-### Ручное удаление
+### Ручная установка
 
-```bash
-# 1. Убрать импорт из layout.tsx / page.tsx
-# 2. Удалить API-роут
-rm -rf src/app/api/source/
-
-# 3. Удалить submodule
-git submodule deinit src/components/inspector
-git rm src/components/inspector
-rm -rf .git/modules/src/components/inspector
-
-# 4. (Опционально) Удалить framer-motion, если больше не нужен
-bun remove framer-motion
+```tsx
+// layout.tsx или page.tsx:
+import { SelectElementFab } from '@/components/inspector';
+// Добавить в JSX:
+<SelectElementFab />
 ```
 
----
+```bash
+# API-роут (скопировать из модуля):
+cp src/components/inspector/api-source-route.ts src/app/api/source/route.ts
+```
 
-## Обновление
-
-### Через скрипт
+## Удаление и обновление
 
 ```bash
+# Удалить (импорт, API-роут, submodule):
+bash src/components/inspector/scripts/uninstall.sh
+
+# Обновить до последней версии:
 bash src/components/inspector/scripts/update.sh
 ```
 
-### Ручное обновление
+## Использование
 
-```bash
-git submodule update --remote src/components/inspector
-```
+### Режим инспекции
 
----
+- FAB-кнопка в правом нижнем углу включает режим инспекции
+- Клик по элементу показывает свёрнутую панель (тег, ID, файл:строка)
+- Шеврон раскрывает все секции
+- Esc закрывает инспектор
+- Панель перетаскивается за заголовок
 
-## Структура модуля
+### Кнопки в заголовке панели
 
-```
-inspector/
-  index.ts                    Barrel export
-  types.ts                    TypeScript-интерфейсы
-  select-element-fab.tsx      Корневой composer (49 строк)
-  inspector-fab.tsx           FAB-кнопка + тултип (62 строки)
-  inspector-panel.tsx         Панель-композитор (109 строк)
-  highlight-overlay.tsx       Подсветка элемента (22 строки)
-  panel-sections.tsx          Секции панели: Source, Classes, Text,
-                              CSS Path, HTML, Styles, Snippet (198 строк)
-  use-element-inspector.ts    Хук: инспекция + DOM-события (226 строк)
-  use-panel-drag.ts           Хук: перетаскивание панели (46 строк)
-  api-source-route.ts         Шаблон API-роута для установки
-  eslint.config.mjs           ESLint-конфиг модуля
-  package.json                Метаданные и скрипты модуля
-  scripts/
-    install.sh                Автоматическая установка
-    uninstall.sh              Автоматическое удаление
-    update.sh                 Автоматическое обновление
-  tests/
-    select-element-fab.test.tsx
-    use-element-inspector.test.ts
-    use-panel-drag.test.ts
-  README.md                   Этот файл
-```
-
----
-
-## Использование в компонентах
+| Кнопка | Действие |
+|--------|----------|
+| Документ | Copy task context (файл, тег, текст) |
+| `<>` | Open in VS Code |
+| Два прямоугольника | Copy file:line |
+| Шеврон | Свернуть / развернуть секции |
+| x | Закрыть панель |
 
 ### data-src атрибут
 
-Для отображения источника добавьте `data-src="путь/к/файлу:номер_строки"` на JSX-элементы:
+Для отображения источника добавьте `data-src` на JSX-элементы:
 
 ```tsx
 <h1 data-src="src/components/sections/hero.tsx:12">Заголовок</h1>
 ```
 
-Инспектор поднимется по DOM-дереву и найдёт ближайший `data-src`.
+Инспектор поднимается по DOM-дереву и найдёт ближайший `data-src`.
 
-### Пороги (Anti-Monolith ZAI-ARCH-002)
+### Автогенерация data-src (экспериментально)
 
-Модуль следует стандарту модульной архитектуры:
+Плагин для Turbopack добавляет `data-src` автоматически:
 
-| Правило | Порог | Факт |
-|---------|-------|------|
-| Файл | 250 строк | Макс. 226 (хук) |
-| Компонент | 200 строк | Макс. 109 (panel) |
-| useState | 2 на компонент | 0 в компонентах, 6 в хуках |
+```ts
+// next.config.ts
+import { dataSrcPlugin } from './src/components/inspector/plugins/data-src-plugin';
 
----
+const nextConfig = {
+  experimental: { turbo: { plugins: [dataSrcPlugin()] } },
+};
+export default nextConfig;
+```
 
-## API-роут
+Пропускает `node_modules`, `inspector/`, комментарии и control flow. Если API Turbopack изменится - добавляйте `data-src` вручную.
 
-Модуль требует API-роут `/api/source` для загрузки сниппетов исходного кода. Скрипт `install.sh` создаёт его автоматически, либо скопируйте `api-source-route.ts` вручную.
+## Конфигурация
 
-Роут принимает:
-- `file` — путь к файлу (валидируется по белому списку)
-- `line` — номер строки
-- `ctx` — контекст (строк вокруг, по умолчанию 8)
+### Зависимости (peerDependencies)
 
----
+| Пакет | Версия |
+|-------|--------|
+| `framer-motion` | >= 11.0 |
+| `react-syntax-highlighter` | >= 15.0 |
+| `next` | >= 15.0 |
+| `react` | >= 19.0 |
 
-## Конфигурация ESLint
-
-Модуль поставляется с собственным `eslint.config.mjs`. Для подключения в основной проект:
+### ESLint (опционально)
 
 ```js
-// eslint.config.mjs (корень проекта)
+// eslint.config.mjs корня проекта:
 import inspectorConfig from './src/components/inspector/eslint.config.mjs';
-
-export default [
-  ...inspectorConfig,
-  // ваш основной конфиг
-];
+export default [...inspectorConfig, /* ваш конфиг */];
 ```
 
----
+### API-роут `/api/source`
 
-## Тесты
+Создаётся автоматически скриптом `install.sh`. Принимает `file`, `line`, `ctx` (контекст). Файл валидируется по белому списку директорий.
 
-```bash
-# Запустить тесты модуля
-cd src/components/inspector
-bun test
+## Структура модуля
 
-# Или из корня проекта
-bun test src/components/inspector
-```
+- `index.ts` - Barrel export
+- `types.ts` - Интерфейсы (ElementInfo, SourceInfo, BoxModel, SnippetData)
+- `select-element-fab.tsx` - Корневой composer (49 строк)
+- `inspector-fab.tsx` - FAB-кнопка (62 строки)
+- `inspector-panel.tsx` - Draggable сворачиваемая панель (185 строк)
+- `highlight-overlay.tsx` - Подсветка элемента (22 строки)
+- `panel-sections.tsx` - Секции панели (202 строки)
+- `box-model-section.tsx` - Box Model диаграмма (96 строк)
+- `use-element-inspector.ts` - Хук инспекции (242 строки)
+- `use-panel-drag.ts` - Хук перетаскивания (46 строк)
+- `plugins/data-src-plugin.ts` - Turbopack плагин
+- `api-source-route.ts` - Шаблон API-роута
+- `eslint.config.mjs` - ESLint конфиг модуля
+- `scripts/` - install.sh, uninstall.sh, update.sh
+- `tests/` - Тест-заглушки
 
----
+## Пороги (ZAI-ARCH-002)
 
-## Лицензия
-
-MIT
+| Правило | Лимит | Факт |
+|---------|-------|------|
+| Файл | 250 строк | Макс. 242 |
+| Компонент | 200 строк | Макс. 185 |
+| useState | 2 на компонент | 0 в компонентах, 6 в хуках |
