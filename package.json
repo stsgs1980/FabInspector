@@ -1,0 +1,37 @@
+{
+  "name": "FabInspector",
+  "version": "3.1.0",
+  "description": "Visual element inspector for Next.js dev mode. FAB button with draggable info panel.",
+  "license": "MIT",
+  "author": "STS",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stsgs1980/FabInspector.git"
+  },
+  "keywords": [
+    "inspector",
+    "devtools",
+    "nextjs",
+    "react",
+    "element-inspector",
+    "dom-inspector"
+  ],
+  "peerDependencies": {
+    "framer-motion": ">=11.0.0",
+    "next": ">=15.0.0",
+    "react": ">=19.0.0"
+  },
+  "scripts": {
+    "install:inspector": "bash scripts/install.sh",
+    "uninstall:inspector": "bash scripts/uninstall.sh",
+    "update:inspector": "bash scripts/update.sh",
+    "lint": "eslint . --max-warnings=0",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./index.ts",
+    "./types": "./types.ts",
+    "./styles": "./inspector-panel.module.css"
+  }
+}
