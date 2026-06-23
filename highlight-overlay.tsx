@@ -12,9 +12,9 @@ export function HighlightOverlay({
         left: highlightBox.left,
         width: highlightBox.width,
         height: highlightBox.height,
-        border: '1px dashed #6366F1',
-        backgroundColor: 'rgba(99, 102, 241, 0.06)',
-        borderRadius: '4px',
+        border: '1px dashed #58A6FF',
+        backgroundColor: 'rgba(56, 139, 253, 0.06)',
+        borderRadius: '3px',
         transition: 'all 0.1s ease-out',
       }}
       aria-hidden="true"

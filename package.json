@@ -1,7 +1,7 @@
 {
   "name": "FabInspector",
-  "version": "3.1.0",
-  "description": "Visual element inspector for Next.js dev mode. FAB button with draggable info panel.",
+  "version": "3.2.0",
+  "description": "Visual element inspector for Next.js dev mode — GitHub Dark themed, with SyntaxHighlighter, Box-model, and VS Code integration.",
   "license": "MIT",
   "author": "STS",
   "repository": {
@@ -14,12 +14,15 @@
     "nextjs",
     "react",
     "element-inspector",
-    "dom-inspector"
+    "dom-inspector",
+    "box-model",
+    "github-dark"
   ],
   "peerDependencies": {
     "framer-motion": ">=11.0.0",
     "next": ">=15.0.0",
-    "react": ">=19.0.0"
+    "react": ">=19.0.0",
+    "react-syntax-highlighter": ">=15.0.0"
   },
   "scripts": {
     "install:inspector": "bash scripts/install.sh",
