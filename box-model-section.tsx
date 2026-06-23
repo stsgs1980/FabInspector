@@ -27,7 +27,7 @@ function BoxRow({
       <span className="w-10 text-right text-[#6B7280]">{label}</span>
       <div className="flex-1">
         <div
-          className="border-2 text-center py-1 text-[#374151]"
+          className="border text-center py-1 text-[#374151]"
           style={{ borderColor: color, backgroundColor: bg }}
         >
           {allSame ? (
