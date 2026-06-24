@@ -17,54 +17,60 @@
 - Сниппет исходного кода с подсветкой синтаксиса
 - Copy task context: структурированный промпт (файл + тег + текст)
 - Copy file:line в буфер обмена
+- Quick-copy в свёрнутой панели (тег + классы + текст)
 
 Панель по умолчанию свёрнута (только заголовок), раскрывается по клику на шеврон. Перетаскивается за заголовок.
 
 ## Установка
 
-### Вариант A: Новый проект
+### npm / bun
 
 ```bash
-git submodule add https://github.com/stsgs1980/FabInspector.git src/components/inspector
-bun add framer-motion react-syntax-highlighter
-bash src/components/inspector/scripts/install.sh
+bun add @stsgs1980/fab-inspector -D
+# или
+npm install @stsgs1980/fab-inspector -D
 ```
 
-### Вариант B: Существующий проект
+Peer dependencies (если ещё не стоят):
 
 ```bash
-git submodule add https://github.com/stsgs1980/FabInspector.git src/components/inspector
 bun add framer-motion react-syntax-highlighter
-bash src/components/inspector/scripts/install.sh
 ```
 
-Скрипт автоматически:
-- Проверяет зависимости (framer-motion, react-syntax-highlighter)
-- Создаёт API-роут `src/app/api/source/route.ts`
-- Вставляет `import` и `<SelectElementFab />` в layout.tsx или page.tsx
+### Подключение (одна команда)
+
+```bash
+npx @stsgs1980/fab-inspector init
+```
+
+CLI автоматически:
+- Создаёт `src/app/api/source/route.ts` (re-export GET из пакета)
+- Добавляет `import { SelectElementFab } from '@stsgs1980/fab-inspector'` в `src/app/layout.tsx`
+- Вставляет `<SelectElementFab />` перед `</body>`
+- Проверяет наличие peer dependencies
+
+Идемпотентно — безопасно запускать сколько угодно раз.
 
 ### Ручная установка
 
 ```tsx
-// layout.tsx или page.tsx:
-import { SelectElementFab } from '@/components/inspector';
-// Добавить в JSX:
+// src/app/layout.tsx:
+import { SelectElementFab } from '@stsgs1980/fab-inspector';
+// В JSX перед </body>:
 <SelectElementFab />
 ```
 
-```bash
-# API-роут (скопировать из модуля):
-cp src/components/inspector/api-source-route.ts src/app/api/source/route.ts
+```ts
+// src/app/api/source/route.ts:
+export { GET } from '@stsgs1980/fab-inspector/api/source';
 ```
 
-## Удаление и обновление
+## Обновление
 
 ```bash
-# Удалить (импорт, API-роут, submodule):
-bash src/components/inspector/scripts/uninstall.sh
-
-# Обновить до последней версии:
-bash src/components/inspector/scripts/update.sh
+bun update @stsgs1980/fab-inspector
+# или
+npm update @stsgs1980/fab-inspector
 ```
 
 ## Использование
@@ -79,12 +85,13 @@ bash src/components/inspector/scripts/update.sh
 
 ### Кнопки в заголовке панели
 
-| Кнопка | Действие |
-|--------|----------|
-| Документ | Copy task context (файл, тег, текст) |
-| Два прямоугольника | Copy file:line |
-| Шеврон | Свернуть / развернуть секции |
-| x | Закрыть панель |
+| Кнопка | Действие | Доступна без `data-src` |
+|--------|----------|-------------------------|
+| Документ | Copy task context (файл, тег, текст) | нет |
+| Два прямоугольника | Copy file:line | нет |
+| Копировать | Quick-copy (тег + классы + текст) | **да** |
+| Шеврон | Свернуть / развернуть секции | да |
+| x | Закрыть панель | да |
 
 ### data-src атрибут
 
@@ -96,21 +103,7 @@ bash src/components/inspector/scripts/update.sh
 
 Инспектор поднимается по DOM-дереву и найдёт ближайший `data-src`.
 
-### Автогенерация data-src (экспериментально)
-
-Плагин для Turbopack добавляет `data-src` автоматически:
-
-```ts
-// next.config.ts
-import { dataSrcPlugin } from './src/components/inspector/plugins/data-src-plugin';
-
-const nextConfig = {
-  experimental: { turbo: { plugins: [dataSrcPlugin()] } },
-};
-export default nextConfig;
-```
-
-Пропускает `node_modules`, `inspector/`, комментарии и control flow. Если API Turbopack изменится - добавляйте `data-src` вручную.
+> **Next.js 16 note:** Авто-проставление `data-src` через Turbopack plugin в Next.js 16 больше не работает (API `experimental.turbo.plugins` удалён). Проставляйте `data-src` вручную на ключевых элементах. SWC plugin для авто-разметки — в планах.
 
 ## Конфигурация
 
@@ -123,40 +116,31 @@ export default nextConfig;
 | `next` | >= 15.0 |
 | `react` | >= 19.0 |
 
-### ESLint (опционально)
+### Production safety
 
-```js
-// eslint.config.mjs корня проекта:
-import inspectorConfig from './src/components/inspector/eslint.config.mjs';
-export default [...inspectorConfig, /* ваш конфиг */];
-```
+- Пакет ставится в `devDependencies` — в production-bundle не попадает
+- Компонент `SelectElementFab` имеет dev-only guard: `if (process.env.NODE_ENV !== 'development') return null`
+- `sideEffects: false` — tree-shaking вырезает неиспользуемый код
 
 ### API-роут `/api/source`
 
-Создаётся автоматически скриптом `install.sh`. Принимает `file`, `line`, `ctx` (контекст). Файл валидируется по белому списку директорий.
+Создаётся CLI `init` автоматически. Принимает `file`, `line`, `ctx` (контекст строк). Файл валидируется по белому списку директорий (`src/components/`, `src/app/`, `src/content/`, `src/hooks/`, `src/lib/`).
 
 ## Структура модуля
 
-- `index.ts` - Barrel export
-- `types.ts` - Интерфейсы (ElementInfo, SourceInfo, BoxModel, SnippetData)
-- `select-element-fab.tsx` - Корневой composer (49 строк)
-- `inspector-fab.tsx` - FAB-кнопка (62 строки)
-- `inspector-panel.tsx` - Draggable сворачиваемая панель (185 строк)
-- `highlight-overlay.tsx` - Подсветка элемента (22 строки)
-- `panel-sections.tsx` - Секции панели (202 строки)
-- `box-model-section.tsx` - Box Model диаграмма (96 строк)
-- `use-element-inspector.ts` - Хук инспекции (242 строки)
-- `use-panel-drag.ts` - Хук перетаскивания (46 строк)
-- `plugins/data-src-plugin.ts` - Turbopack плагин
-- `api-source-route.ts` - Шаблон API-роута
-- `eslint.config.mjs` - ESLint конфиг модуля
-- `scripts/` - install.sh, uninstall.sh, update.sh
-- `tests/` - Тест-заглушки
+- `index.ts` — Barrel export
+- `types.ts` — Интерфейсы (ElementInfo, SourceInfo, BoxModel, SnippetData)
+- `select-element-fab.tsx` — Корневой composer
+- `inspector-fab.tsx` — FAB-кнопка
+- `inspector-panel.tsx` — Draggable сворачиваемая панель
+- `highlight-overlay.tsx` — Подсветка элемента
+- `panel-sections.tsx` — Секции панели (Source, Classes, Text, CSS Path, HTML, Styles, Snippet)
+- `box-model-section.tsx` — Box Model диаграмма
+- `use-element-inspector.ts` — Хук инспекции
+- `use-panel-drag.ts` — Хук перетаскивания
+- `api-source-route.ts` — GET handler для `/api/source`
+- `cli/init.mjs` — CLI `npx @stsgs1980/fab-inspector init`
 
-## Пороги (ZAI-ARCH-002)
+## License
 
-| Правило | Лимит | Факт |
-|---------|-------|------|
-| Файл | 250 строк | Макс. 242 |
-| Компонент | 200 строк | Макс. 185 |
-| useState | 2 на компонент | 0 в компонентах, 6 в хуках |
+MIT
