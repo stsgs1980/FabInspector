@@ -1,12 +1,16 @@
 // Шаблон API-роута для установки.
-// Скопируйте в src/app/api/source/route.ts
-// Не забудьте импорты NextRequest и NextResponse!
+// В проекте-потребителе создайте src/app/api/source/route.ts:
+//   export { GET } from '@stsgs1980/fab-inspector/api/source';
+// Либо, если модуль подключён как локальный путь:
+//   export { GET } from '@/components/inspector/api-source-route';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { readFile } from 'fs/promises';
 import { resolve } from 'path';
 
-const PROJECT_ROOT = resolve(process.cwd(), '..');
+// process.cwd() в Next.js = корень проекта-потребителя.
+// Никаких '..' — иначе путь уходит за пределы проекта и isAllowed() всегда false.
+const PROJECT_ROOT = process.cwd();
 const ALLOWED_PREFIXES = [
   resolve(PROJECT_ROOT, 'src/components/'),
   resolve(PROJECT_ROOT, 'src/app/'),

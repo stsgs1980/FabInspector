@@ -46,6 +46,32 @@ function getCssPath(el: HTMLElement): string {
   return parts.join(' > ');
 }
 
+function getTextForInspector(el: HTMLElement): string {
+  const TEXT_TAGS = new Set([
+    'H1', 'H2', 'H3', 'H4', 'H5', 'H6',
+    'BUTTON', 'A', 'LABEL', 'P', 'SPAN', 'LI', 'TD', 'TH', 'DT', 'DD',
+  ]);
+  if (!TEXT_TAGS.has(el.tagName)) return '';
+
+  // Только прямые текстовые узлы — без содержимого дочерних элементов.
+  // Для <span><Icon /> Wiki Codex <em>v2</em></span> вернёт "Wiki Codex",
+  // а не "Wiki Codex v2" (как textContent).
+  let direct = '';
+  for (const node of Array.from(el.childNodes)) {
+    if (node.nodeType === Node.TEXT_NODE && node.textContent) {
+      direct += node.textContent;
+    }
+  }
+  const directTrim = direct.trim();
+
+  // Если прямого текста нет (всё во вложенных) — fallback на textContent,
+  // чтобы не потерять <button><Icon />Save</button> (там текст прямой,
+  // но иногда иконка съедает весь текст).
+  const fallback = (el.textContent || '').trim();
+  const result = directTrim || fallback;
+  return result.slice(0, 120);
+}
+
 function getElementInfo(el: HTMLElement): ElementInfo | null {
   const rect = el.getBoundingClientRect();
   const cs = window.getComputedStyle(el);
@@ -65,12 +91,7 @@ function getElementInfo(el: HTMLElement): ElementInfo | null {
     id: el.id || '',
     classes: typeof el.className === 'string' ? el.className : '',
     rect,
-    text: [
-      'H1', 'H2', 'H3', 'H4', 'H5', 'H6',
-      'BUTTON', 'A', 'LABEL', 'P', 'SPAN', 'LI', 'TD', 'TH', 'DT', 'DD',
-    ].includes(el.tagName)
-      ? (el.textContent || '').trim().slice(0, 120)
-      : '',
+    text: getTextForInspector(el),
     outerHTML,
     cssPath: getCssPath(el),
     computedStyles: {

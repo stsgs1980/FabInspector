@@ -20,8 +20,11 @@ export function SourceSection({ source }: { source: NonNullable<ElementInfo['sou
     navigator.clipboard.writeText(`${source.file}:${source.line}`).catch(() => {});
   return (
     <div className="px-4 py-2.5 bg-[#0D1117] border-b border-[#30363D]">
-      <div className="text-[11px] font-semibold text-[#58A6FF] uppercase tracking-wider mb-1">
-        Источник
+      <div className="flex items-center justify-between mb-1">
+        <div className="text-[11px] font-semibold text-[#58A6FF] uppercase tracking-wider">
+          Источник
+        </div>
+        <CopyButton text={`${source.file}:${source.line}`} />
       </div>
       <div
         className="font-mono text-xs text-[#E6EDF3] cursor-pointer hover:text-[#58A6FF] transition-colors break-all"
@@ -39,8 +42,9 @@ export function ClassesSection({ classes }: { classes: string }) {
   const copy = () => navigator.clipboard.writeText(classes).catch(() => {});
   return (
     <div className="px-4 py-2.5 border-b border-[#30363D]">
-      <div className="text-[11px] font-semibold text-[#8B949E] uppercase tracking-wider mb-1">
-        Classes
+      <div className="flex items-center justify-between mb-1">
+        <div className="text-[11px] font-semibold text-[#8B949E] uppercase tracking-wider">Classes</div>
+        <CopyButton text={classes} />
       </div>
       <div
         className="font-mono text-xs text-[#E6EDF3] bg-[#0D1117] rounded px-2.5 py-1.5 break-all cursor-pointer hover:bg-[#161B22] transition-colors border border-[#30363D]"

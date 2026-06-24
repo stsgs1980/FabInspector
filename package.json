@@ -1,7 +1,7 @@
 {
-  "name": "FabInspector",
-  "version": "3.2.0",
-  "description": "Visual element inspector for Next.js dev mode — GitHub Dark themed, with SyntaxHighlighter, Box-model, and VS Code integration.",
+  "name": "@stsgs1980/fab-inspector",
+  "version": "3.4.0",
+  "description": "Visual element inspector for Next.js dev mode — GitHub Dark themed, with SyntaxHighlighter and Box-model visualization.",
   "license": "MIT",
   "author": "STS",
   "repository": {
@@ -35,6 +35,22 @@
   "exports": {
     ".": "./index.ts",
     "./types": "./types.ts",
-    "./styles": "./inspector-panel.module.css"
+    "./api/source": "./api-source-route.ts",
+    "./plugins/data-src-plugin": "./plugins/data-src-plugin.ts",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "fab-inspector": "./cli/init.mjs"
+  },
+  "files": [
+    "*.ts",
+    "*.tsx",
+    "plugins/",
+    "cli/",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
   }
 }

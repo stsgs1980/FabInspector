@@ -97,22 +97,6 @@ export function InspectorPanel({
           )}
           {elementInfo.source && (
             <button
-              onClick={() => {
-                const { file, line } = elementInfo.source!;
-                window.open(`vscode://file/${file}:${line}`, '_self');
-              }}
-              className="p-1.5 rounded hover:bg-[#21262D] text-[#8B949E] hover:text-[#58A6FF] transition-colors cursor-pointer"
-              aria-label="Open in VS Code"
-              title="Open in VS Code"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="16 18 22 12 16 6" />
-                <polyline points="8 6 2 12 8 18" />
-              </svg>
-            </button>
-          )}
-          {elementInfo.source && (
-            <button
               onClick={() =>
                 navigator.clipboard
                   .writeText(`${elementInfo.source!.file}:${elementInfo.source!.line}`)
@@ -128,6 +112,26 @@ export function InspectorPanel({
               </svg>
             </button>
           )}
+          {/* Always-visible quick copy: tag + id + classes + text.
+              Работает без data-src — можно скопировать базу из свёрнутой панели. */}
+          <button
+            onClick={() => {
+              const parts = [
+                `<${elementInfo.tag}${elementInfo.id ? `#${elementInfo.id}` : ''}>`,
+                elementInfo.classes ? elementInfo.classes : '',
+                elementInfo.text ? `"${elementInfo.text}"` : '',
+              ].filter(Boolean);
+              navigator.clipboard.writeText(parts.join('\n')).catch(() => {});
+            }}
+            className="p-1.5 rounded hover:bg-[#21262D] text-[#8B949E] hover:text-[#58A6FF] transition-colors cursor-pointer"
+            aria-label="Скопировать информацию об элементе"
+            title="Копировать (тег + классы + текст)"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+            </svg>
+          </button>
           <div className="w-px h-4 bg-[#30363D] mx-0.5" />
           <button
             onClick={() => setExpanded((v) => !v)}

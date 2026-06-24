@@ -1,6 +1,6 @@
 # FabInspector
 
-Визуальный инспектор элементов для Next.js dev mode. Плавающая FAB-кнопка с draggable панелью в GitHub Dark Theme, подсветкой синтаксиса, box-model визуализацией и интеграцией с VS Code.
+Визуальный инспектор элементов для Next.js dev mode. Плавающая FAB-кнопка с draggable панелью в GitHub Dark Theme, подсветкой синтаксиса и box-model визуализацией.
 
 ![React 19](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)
 ![Next.js 15+](https://img.shields.io/badge/Next.js-15%2B-000000?style=flat-square&logo=nextdotjs)
@@ -15,8 +15,8 @@
 - Вычисленные стили (размер, шрифт, цвет)
 - Box Model: визуальная схема margin / border / padding / content
 - Сниппет исходного кода с подсветкой синтаксиса
-- Кнопка Open in VS Code: переход к file:line в редакторе
 - Copy task context: структурированный промпт (файл + тег + текст)
+- Copy file:line в буфер обмена
 
 Панель по умолчанию свёрнута (только заголовок), раскрывается по клику на шеврон. Перетаскивается за заголовок.
 
@@ -82,7 +82,6 @@ bash src/components/inspector/scripts/update.sh
 | Кнопка | Действие |
 |--------|----------|
 | Документ | Copy task context (файл, тег, текст) |
-| `<>` | Open in VS Code |
 | Два прямоугольника | Copy file:line |
 | Шеврон | Свернуть / развернуть секции |
 | x | Закрыть панель |
