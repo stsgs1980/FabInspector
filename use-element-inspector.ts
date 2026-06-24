@@ -138,7 +138,19 @@ function computePanelPos(rect: DOMRect): { x: number; y: number } {
   return { x, y };
 }
 
-export function useElementInspector() {
+export interface ElementInspectorApi {
+  active: boolean;
+  elementInfo: ElementInfo | null;
+  panelPos: { x: number; y: number };
+  setPanelPos: (pos: { x: number; y: number }) => void;
+  highlightBox: DOMRect | null;
+  snippet: SnippetData | null;
+  snippetLoading: boolean;
+  toggleActive: () => void;
+  closePanel: () => void;
+}
+
+export function useElementInspector(): ElementInspectorApi {
   const [active, setActive] = useState(false);
   const [elementInfo, setElementInfo] = useState<ElementInfo | null>(null);
   const [panelPos, setPanelPos] = useState({ x: 0, y: 0 });

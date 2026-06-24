@@ -14,7 +14,7 @@ import { InspectorFab } from './inspector-fab';
 // вырезает весь модуль целиком (sideEffects: false в package.json).
 const IS_DEV = process.env.NODE_ENV === 'development';
 
-export function SelectElementFab() {
+export function SelectElementFab(): React.ReactElement | null {
   const {
     active,
     elementInfo,

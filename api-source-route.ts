@@ -24,7 +24,7 @@ function isAllowed(filePath: string): boolean {
   return ALLOWED_PREFIXES.some((prefix) => resolved.startsWith(prefix));
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse> {
   const { searchParams } = new URL(request.url);
   const file = searchParams.get('file');
   const line = parseInt(searchParams.get('line') || '1', 10);

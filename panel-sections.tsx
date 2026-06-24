@@ -2,8 +2,8 @@ import type { ElementInfo, SnippetData } from './types';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-function CopyButton({ text, label }: { text: string; label?: string }) {
-  const copy = () => navigator.clipboard.writeText(text).catch(() => {});
+function CopyButton({ text, label }: { text: string; label?: string }): React.ReactElement {
+  const copy = (): Promise<void> => navigator.clipboard.writeText(text).catch(() => {});
   return (
     <button
       onClick={copy}
@@ -15,8 +15,8 @@ function CopyButton({ text, label }: { text: string; label?: string }) {
   );
 }
 
-export function SourceSection({ source }: { source: NonNullable<ElementInfo['source']> }) {
-  const copy = () =>
+export function SourceSection({ source }: { source: NonNullable<ElementInfo['source']> }): React.ReactElement {
+  const copy = (): Promise<void> =>
     navigator.clipboard.writeText(`${source.file}:${source.line}`).catch(() => {});
   return (
     <div className="px-4 py-2.5 bg-[#0D1117] border-b border-[#30363D]">
@@ -38,8 +38,8 @@ export function SourceSection({ source }: { source: NonNullable<ElementInfo['sou
   );
 }
 
-export function ClassesSection({ classes }: { classes: string }) {
-  const copy = () => navigator.clipboard.writeText(classes).catch(() => {});
+export function ClassesSection({ classes }: { classes: string }): React.ReactElement {
+  const copy = (): Promise<void> => navigator.clipboard.writeText(classes).catch(() => {});
   return (
     <div className="px-4 py-2.5 border-b border-[#30363D]">
       <div className="flex items-center justify-between mb-1">
@@ -57,8 +57,8 @@ export function ClassesSection({ classes }: { classes: string }) {
   );
 }
 
-export function TextSection({ text }: { text: string }) {
-  const copy = () => navigator.clipboard.writeText(text).catch(() => {});
+export function TextSection({ text }: { text: string }): React.ReactElement {
+  const copy = (): Promise<void> => navigator.clipboard.writeText(text).catch(() => {});
   return (
     <div className="px-4 py-2.5 border-b border-[#30363D]">
       <div className="flex items-center justify-between mb-1">
@@ -76,7 +76,7 @@ export function TextSection({ text }: { text: string }) {
   );
 }
 
-export function CssPathSection({ cssPath }: { cssPath: string }) {
+export function CssPathSection({ cssPath }: { cssPath: string }): React.ReactElement {
   return (
     <div className="px-4 py-2.5 border-b border-[#30363D]">
       <div className="flex items-center justify-between mb-1">
@@ -94,7 +94,7 @@ export function CssPathSection({ cssPath }: { cssPath: string }) {
   );
 }
 
-export function HtmlSection({ outerHTML }: { outerHTML: string }) {
+export function HtmlSection({ outerHTML }: { outerHTML: string }): React.ReactElement {
   return (
     <div className="px-4 py-2.5 border-b border-[#30363D]">
       <div className="flex items-center justify-between mb-1">
@@ -112,7 +112,7 @@ export function HtmlSection({ outerHTML }: { outerHTML: string }) {
   );
 }
 
-export function StylesSection({ styles }: { styles: Record<string, string> }) {
+export function StylesSection({ styles }: { styles: Record<string, string> }): React.ReactElement {
   return (
     <div className="px-4 py-2.5 border-b border-[#30363D]">
       <div className="text-[11px] font-semibold text-[#8B949E] uppercase tracking-wider mb-1.5">
@@ -151,7 +151,7 @@ export function SnippetSection({
   source: NonNullable<ElementInfo['source']>;
   snippet: SnippetData | null;
   snippetLoading: boolean;
-}) {
+}): React.ReactElement {
   const ext = source.file.split('.').pop() || '';
   const lang = ['tsx', 'jsx'].includes(ext) ? 'tsx' : 'typescript';
 

@@ -23,7 +23,17 @@
 
 type TransformResult = { code: string };
 
-export const dataSrcPlugin = () => ({
+interface TurbopackPlugin {
+  name: string;
+  setup(api: {
+    transform: (
+      opts: { filter: RegExp },
+      handler: (args: { code: string; resource: string }) => TransformResult,
+    ) => void;
+  }): void;
+}
+
+export const dataSrcPlugin = (): TurbopackPlugin => ({
   name: 'data-src-injector',
 
   setup(api: {

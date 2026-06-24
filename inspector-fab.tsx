@@ -8,7 +8,7 @@ export function InspectorFab({
   active: boolean;
   onToggle: () => void;
   showTooltip: boolean;
-}) {
+}): React.ReactElement {
   return (
     <>
       <motion.button

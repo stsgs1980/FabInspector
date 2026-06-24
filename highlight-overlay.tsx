@@ -2,7 +2,7 @@ export function HighlightOverlay({
   highlightBox,
 }: {
   highlightBox: DOMRect;
-}) {
+}): React.ReactElement {
   return (
     <div
       data-se-highlight

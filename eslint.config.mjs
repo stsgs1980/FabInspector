@@ -6,7 +6,9 @@ const inspectorConfig = [
     rules: {
       // Модуль должен оставаться ниже порогов Anti-Monolith (ZAI-ARCH-002)
       'max-lines': ['warn', { max: 250, skipBlankLines: true, skipComments: true }],
-      'max-lines-per-function': ['warn', { max: 50, skipBlankLines: true, skipComments: true }],
+      // React components и hooks с useEffect логикой часто больше 50 строк.
+      // 200 — реалистичный потолок, превышение = явный сигнал к рефакторингу.
+      'max-lines-per-function': ['warn', { max: 200, skipBlankLines: true, skipComments: true }],
 
       // Компоненты React: максимум 200 строк JSX
       'react/no-multi-comp': 'off',

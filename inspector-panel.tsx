@@ -28,7 +28,7 @@ export function InspectorPanel({
   onClose: () => void;
   snippet: SnippetData | null;
   snippetLoading: boolean;
-}) {
+}): React.ReactElement {
   const [expanded, setExpanded] = useState(false);
 
   return (

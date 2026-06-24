@@ -18,7 +18,7 @@ function BoxRow({
   top: string; right: string; bottom: string; left: string;
   color: string; bg: string; label: string;
   inner: React.ReactNode;
-}) {
+}): React.ReactElement {
   const allSame = top === right && right === bottom && bottom === left;
   const display = allSame ? fmt(top) : `${fmt(top)} ${fmt(right)} ${fmt(bottom)} ${fmt(left)}`;
 
@@ -47,7 +47,7 @@ function BoxRow({
   );
 }
 
-export function BoxModelSection({ boxModel }: { boxModel: BoxModel }) {
+export function BoxModelSection({ boxModel }: { boxModel: BoxModel }): React.ReactElement {
   return (
     <div className="px-4 py-2.5 border-b border-[#30363D]">
       <div className="text-[11px] font-semibold text-[#8B949E] uppercase tracking-wider mb-2">

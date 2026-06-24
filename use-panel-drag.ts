@@ -3,7 +3,7 @@ import { useState, useCallback, useRef } from 'react';
 export function usePanelDrag(
   panelPos: { x: number; y: number },
   setPanelPos: (pos: { x: number; y: number }) => void,
-) {
+): { isDragging: boolean; handleDragStart: (e: React.MouseEvent) => void } {
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef<{
     startX: number;
