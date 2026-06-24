@@ -2,6 +2,7 @@
 
 Визуальный инспектор элементов для Next.js dev mode. Плавающая FAB-кнопка с draggable панелью в GitHub Dark Theme, подсветкой синтаксиса и box-model визуализацией.
 
+![npm version](https://img.shields.io/npm/v/@stsgs1980/fab-inspector?style=flat-square&logo=npm)
 ![React 19](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)
 ![Next.js 15+](https://img.shields.io/badge/Next.js-15%2B-000000?style=flat-square&logo=nextdotjs)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)
@@ -122,11 +123,29 @@ npm update @stsgs1980/fab-inspector
 - Компонент `SelectElementFab` имеет dev-only guard: `if (process.env.NODE_ENV !== 'development') return null`
 - `sideEffects: false` — tree-shaking вырезает неиспользуемый код
 
+### Сборка (v3.5.0+)
+
+Начиная с v3.5.0 пакет публикуется **собранным** (`dist/` — ESM `.js` + `.d.ts` + sourcemaps), а не сырыми `.ts`/`.tsx`. Это значит:
+
+- **Не нужен** `transpilePackages` в `next.config.ts` — работает из коробки
+- **Не нужен** TypeScript на стороне потребителя для рантайма
+- TypeScript-типы подключаются автоматически через `exports[].types`
+
+Сборка из исходников (для контрибьюторов модуля):
+
+```bash
+git clone https://github.com/stsgs1980/FabInspector.git
+cd FabInspector/src/components/inspector
+npm run build        # tsc -p tsconfig.build.json → dist/
+```
+
 ### API-роут `/api/source`
 
 Создаётся CLI `init` автоматически. Принимает `file`, `line`, `ctx` (контекст строк). Файл валидируется по белому списку директорий (`src/components/`, `src/app/`, `src/content/`, `src/hooks/`, `src/lib/`).
 
 ## Структура модуля
+
+**Исходники** (в git):
 
 - `index.ts` — Barrel export
 - `types.ts` — Интерфейсы (ElementInfo, SourceInfo, BoxModel, SnippetData)
@@ -139,7 +158,15 @@ npm update @stsgs1980/fab-inspector
 - `use-element-inspector.ts` — Хук инспекции
 - `use-panel-drag.ts` — Хук перетаскивания
 - `api-source-route.ts` — GET handler для `/api/source`
+- `plugins/data-src-plugin.ts` — Turbopack plugin (Next.js 15.3+, авто-data-src)
 - `cli/init.mjs` — CLI `npx @stsgs1980/fab-inspector init`
+- `tsconfig.build.json` — Конфиг сборки `dist/`
+
+**В npm-пакете** (генерируется `npm run build`):
+
+- `dist/` — ESM `.js` + `.d.ts` + `.js.map` для каждого исходника
+- `cli/init.mjs` — CLI (как есть)
+- `README.md` + `package.json`
 
 ## License
 

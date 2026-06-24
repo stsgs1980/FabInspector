@@ -1,9 +1,14 @@
 {
   "name": "@stsgs1980/fab-inspector",
-  "version": "3.4.1",
+  "version": "3.5.0",
   "description": "Visual element inspector for Next.js dev mode — GitHub Dark themed, with SyntaxHighlighter and Box-model visualization.",
   "license": "MIT",
   "author": "STS",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "repository": {
     "type": "git",
     "url": "https://github.com/stsgs1980/FabInspector.git"
@@ -25,6 +30,8 @@
     "react-syntax-highlighter": ">=15.0.0"
   },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run build",
     "install:inspector": "bash scripts/install.sh",
     "uninstall:inspector": "bash scripts/uninstall.sh",
     "update:inspector": "bash scripts/update.sh",
@@ -33,23 +40,32 @@
     "typecheck": "tsc --noEmit"
   },
   "exports": {
-    ".": "./index.ts",
-    "./types": "./types.ts",
-    "./api/source": "./api-source-route.ts",
-    "./plugins/data-src-plugin": "./plugins/data-src-plugin.ts",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
+    },
+    "./api/source": {
+      "types": "./dist/api-source-route.d.ts",
+      "default": "./dist/api-source-route.js"
+    },
+    "./plugins/data-src-plugin": {
+      "types": "./dist/plugins/data-src-plugin.d.ts",
+      "default": "./dist/plugins/data-src-plugin.js"
+    },
     "./package.json": "./package.json"
   },
   "bin": {
     "fab-inspector": "./cli/init.mjs"
   },
   "files": [
-    "*.ts",
-    "*.tsx",
-    "plugins/",
+    "dist/",
     "cli/",
     "README.md"
   ],
-  "sideEffects": false,
   "publishConfig": {
     "access": "public"
   }
