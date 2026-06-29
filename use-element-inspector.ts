@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import type { ElementInfo, SnippetData, SourceInfo, BoxModel } from './types';
+import { isClickInsideInspector } from './use-shadow-root';
 
 function findSource(el: HTMLElement): SourceInfo | null {
   let current: HTMLElement | null = el;
@@ -75,6 +76,9 @@ function getTextForInspector(el: HTMLElement): string {
 function getElementInfo(el: HTMLElement): ElementInfo | null {
   const rect = el.getBoundingClientRect();
   const cs = window.getComputedStyle(el);
+  if (el.getRootNode() instanceof ShadowRoot) {
+    return null;
+  }
   if (
     el.closest('[data-se-fab]') ||
     el.closest('[data-se-panel]') ||
@@ -176,31 +180,23 @@ export function useElementInspector(): ElementInspectorApi {
   }, []);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (
-      target.closest('[data-se-fab]') ||
-      target.closest('[data-se-panel]') ||
-      target.closest('[data-se-highlight]')
-    ) {
+    if (isClickInsideInspector(e)) {
       setHighlightBox(null);
       return;
     }
+    const target = e.target as HTMLElement;
     setHighlightBox(target.getBoundingClientRect());
   }, []);
 
   const handleClick = useCallback(
     (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.closest('[data-se-fab]') ||
-        target.closest('[data-se-panel]') ||
-        target.closest('[data-se-highlight]')
-      ) {
+      if (isClickInsideInspector(e)) {
         return;
       }
       e.preventDefault();
       e.stopPropagation();
 
+      const target = e.target as HTMLElement;
       const info = getElementInfo(target);
       if (info) {
         setElementInfo(info);

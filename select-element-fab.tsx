@@ -6,6 +6,7 @@ import { usePanelDrag } from './use-panel-drag';
 import { HighlightOverlay } from './highlight-overlay';
 import { InspectorPanel } from './inspector-panel';
 import { InspectorFab } from './inspector-fab';
+import { useShadowRoot } from './use-shadow-root';
 
 // Dev-only guard: FAB не должен попасть в production-bundle.
 // Это страховка на случай, если потребитель забыл поставить пакет
@@ -31,10 +32,8 @@ export function SelectElementFab(): React.ReactElement | null {
 
   if (!IS_DEV) return null;
 
-  return (
+  const shadowContent = useShadowRoot(
     <>
-      {active && highlightBox && <HighlightOverlay highlightBox={highlightBox} />}
-
       <AnimatePresence>
         {active && elementInfo && (
           <InspectorPanel
@@ -54,6 +53,13 @@ export function SelectElementFab(): React.ReactElement | null {
         onToggle={toggleActive}
         showTooltip={active && !elementInfo}
       />
+    </>,
+  );
+
+  return (
+    <>
+      {active && highlightBox && <HighlightOverlay highlightBox={highlightBox} />}
+      {shadowContent}
     </>
   );
 }
