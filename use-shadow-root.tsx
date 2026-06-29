@@ -33,14 +33,16 @@ button{cursor:pointer}`;
     setReady(true);
   }, []);
 
+  const hostStyle = { position: 'fixed' as const, inset: '0', width: '100vw', height: '100vh', pointerEvents: 'none' as const, zIndex: '2147483647' };
+
   if (!ready || !hostRef.current?.shadowRoot) {
-    return <div ref={hostRef} style={{ display: 'none' }} />;
+    return <div ref={hostRef} style={hostStyle} />;
   }
 
   const container = hostRef.current.shadowRoot.lastElementChild as HTMLElement;
   return (
     <>
-      <div ref={hostRef} style={{ display: 'none' }} />
+      <div ref={hostRef} style={hostStyle} />
       {createPortal(children, container)}
     </>
   );
