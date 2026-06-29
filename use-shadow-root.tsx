@@ -34,7 +34,7 @@ button{cursor:pointer}`;
     setReady(true);
   }, []);
 
-  const hostStyle = { position: 'fixed' as const, top: 0, left: 0, width: 0, height: 0, overflow: 'hidden' as const, pointerEvents: 'none' as const, zIndex: '2147483647' };
+  const hostStyle = { position: 'fixed' as const, top: 0, left: 0, width: 0, height: 0, pointerEvents: 'none' as const, zIndex: '2147483647' as const };
 
   if (!ready || !hostRef.current?.shadowRoot) {
     return <div ref={hostRef} style={hostStyle} />;
