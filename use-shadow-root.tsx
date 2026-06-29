@@ -27,13 +27,14 @@ button{cursor:pointer}`;
     shadow.appendChild(reset);
 
     const container = document.createElement('div');
+    container.style.pointerEvents = 'auto';
     shadow.appendChild(container);
 
     // Trigger re-render so createPortal has a valid target
     setReady(true);
   }, []);
 
-  const hostStyle = { position: 'fixed' as const, inset: '0', width: '100vw', height: '100vh', pointerEvents: 'none' as const, zIndex: '2147483647' };
+  const hostStyle = { position: 'fixed' as const, top: 0, left: 0, width: 0, height: 0, overflow: 'hidden' as const, pointerEvents: 'none' as const, zIndex: '2147483647' };
 
   if (!ready || !hostRef.current?.shadowRoot) {
     return <div ref={hostRef} style={hostStyle} />;
