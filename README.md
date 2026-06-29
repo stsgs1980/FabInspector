@@ -2,10 +2,26 @@
 
 Визуальный инспектор элементов для Next.js dev mode. Плавающая FAB-кнопка с draggable панелью в GitHub Dark Theme, подсветкой синтаксиса и box-model визуализацией.
 
-![npm version](https://img.shields.io/npm/v/@stsgs1980/fab-inspector?style=flat-square&logo=npm)
+![npm version](https://img.shields.io/v/@stsgs1980/fab-inspector?style=flat-square&logo=npm)
 ![React 19](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)
 ![Next.js 15+](https://img.shields.io/badge/Next.js-15%2B-000000?style=flat-square&logo=nextdotjs)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+
+
+## Table of Contents
+
+- [Что делает](#что-делает)
+- [Установка](#установка)
+- [или](#или)
+- [Обновление](#обновление)
+- [или](#или)
+- [Использование](#использование)
+- [Конфигурация](#конфигурация)
+- [Структура модуля](#структура-модуля)
+- [License](#license)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
 
 ## Что делает
 
@@ -24,12 +40,12 @@
 
 ## Установка
 
-### npm / bun
+### Installation
 
 ```bash
 bun add @stsgs1980/fab-inspector -D
-# или
-npm install @stsgs1980/fab-inspector -D
+## или
+bun install @stsgs1980/fab-inspector -D
 ```
 
 Peer dependencies (если ещё не стоят):
@@ -70,7 +86,7 @@ export { GET } from '@stsgs1980/fab-inspector/api/source';
 
 ```bash
 bun update @stsgs1980/fab-inspector
-# или
+## или
 npm update @stsgs1980/fab-inspector
 ```
 
@@ -136,7 +152,7 @@ npm update @stsgs1980/fab-inspector
 ```bash
 git clone https://github.com/stsgs1980/FabInspector.git
 cd FabInspector/src/components/inspector
-npm run build        # tsc -p tsconfig.build.json → dist/
+bun run build        # tsc -p tsconfig.build.json → dist/
 ```
 
 ### API-роут `/api/source`
@@ -162,7 +178,7 @@ npm run build        # tsc -p tsconfig.build.json → dist/
 - `cli/init.mjs` — CLI `npx @stsgs1980/fab-inspector init`
 - `tsconfig.build.json` — Конфиг сборки `dist/`
 
-**В npm-пакете** (генерируется `npm run build`):
+**В npm-пакете** (генерируется `bun run build`):
 
 - `dist/` — ESM `.js` + `.d.ts` + `.js.map` для каждого исходника
 - `cli/init.mjs` — CLI (как есть)
@@ -171,3 +187,41 @@ npm run build        # tsc -p tsconfig.build.json → dist/
 ## License
 
 MIT
+
+
+## Features
+
+- Feature 1 - description
+- Feature 2 - description
+
+
+## Tech Stack
+
+- **Framework** - Next.js
+- **Language** - TypeScript
+- **Styling** - CSS, HTML
+- **Tools** - React
+
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20+ or Bun
+
+### Installation
+
+```bash
+git clone https://github.com/stsgs1980/FabInspector.git
+cd FabInspector
+bun install
+```
+
+### Run
+
+```bash
+bun run dev
+```
+
+---
+Built with: Next.js + React + TypeScript + CSS
