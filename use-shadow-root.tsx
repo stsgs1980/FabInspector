@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect, type ReactNode } from 'react';
+import { useState, useCallback, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { inspectorCss } from './inspector-styles';
 
@@ -7,11 +7,9 @@ import { inspectorCss } from './inspector-styles';
  * with isolated CSS styles (prevents Tailwind conflicts).
  */
 export function useShadowRoot(children: ReactNode): ReactNode {
-  const hostRef = useRef<HTMLDivElement | null>(null);
-  const [ready, setReady] = useState(false);
+  const [container, setContainer] = useState<HTMLElement | null>(null);
 
-  useEffect(() => {
-    const host = hostRef.current;
+  const setHost = useCallback((host: HTMLDivElement | null) => {
     if (!host || host.shadowRoot) return;
 
     const shadow = host.attachShadow({ mode: 'open' });
@@ -22,29 +20,23 @@ export function useShadowRoot(children: ReactNode): ReactNode {
 
     const reset = document.createElement('style');
     reset.textContent = `*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-button,select,input,textarea{font:inherit;color:inherit;background:none;border:none}
-button{cursor:pointer}`;
+ button,select,input,textarea{font:inherit;color:inherit;background:none;border:none}
+ button{cursor:pointer}`;
     shadow.appendChild(reset);
 
     const container = document.createElement('div');
     container.style.pointerEvents = 'auto';
     shadow.appendChild(container);
 
-    // Trigger re-render so createPortal has a valid target
-    setReady(true);
+    setContainer(container);
   }, []);
 
   const hostStyle = { position: 'fixed' as const, top: 0, left: 0, width: 0, height: 0, pointerEvents: 'none' as const, zIndex: '2147483647' as const };
 
-  if (!ready || !hostRef.current?.shadowRoot) {
-    return <div ref={hostRef} style={hostStyle} />;
-  }
-
-  const container = hostRef.current.shadowRoot.lastElementChild as HTMLElement;
   return (
     <>
-      <div ref={hostRef} style={hostStyle} />
-      {createPortal(children, container)}
+      <div ref={setHost} style={hostStyle} />
+      {container && createPortal(children, container)}
     </>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "@stsgs1980/fab-inspector",
-  "version": "3.7.0",
+  "version": "3.7.4",
   "description": "Visual element inspector for Next.js dev mode — GitHub Dark themed, with SyntaxHighlighter and Box-model visualization.",
   "license": "MIT",
   "author": "STS",
@@ -32,6 +32,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "prepublishOnly": "npm run build",
+    "version": "node scripts/update-version.js",
     "install:inspector": "bash scripts/install.sh",
     "uninstall:inspector": "bash scripts/uninstall.sh",
     "update:inspector": "bash scripts/update.sh",
@@ -64,6 +65,8 @@
   "files": [
     "dist/",
     "cli/",
+    "version.ts",
+    "scripts/update-version.js",
     "README.md"
   ],
   "publishConfig": {

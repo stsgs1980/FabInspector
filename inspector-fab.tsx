@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { VERSION } from './version';
 
 export function InspectorFab({
   active,
@@ -42,7 +43,7 @@ export function InspectorFab({
           </svg>
         )}
         <span className="absolute -top-1 -right-1 min-w-[16px] h-4 px-1 rounded-full bg-[#58A6FF] text-[#0D1117] text-[9px] font-bold flex items-center justify-center leading-none select-none">
-          3.5.1
+          {VERSION}
         </span>
       </motion.button>
 
