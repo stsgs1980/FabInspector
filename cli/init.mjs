@@ -7,11 +7,11 @@
  * Идемпотентно: безопасно запускать многократно.
  *
  * Использование:
- *   bun add @stsgs1980/fab-inspector -D
  *   npx @stsgs1980/fab-inspector init
  */
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { execSync } from 'node:child_process';
 
 const PKG = '@stsgs1980/fab-inspector';
 const IMPORT_LINE = `import { SelectElementFab } from '${PKG}';`;
@@ -90,6 +90,33 @@ function detectMissingPeers(cwd) {
   return peers.filter((p) => !deps[p]);
 }
 
+function detectPackageManager(cwd) {
+  if (existsSync(resolve(cwd, 'bun.lockb')) || existsSync(resolve(cwd, 'bun.lock'))) return 'bun';
+  if (existsSync(resolve(cwd, 'pnpm-lock.yaml'))) return 'pnpm';
+  if (existsSync(resolve(cwd, 'yarn.lock'))) return 'yarn';
+  return 'npm';
+}
+
+function isPackageInstalled(cwd) {
+  const pkgPath = resolve(cwd, 'package.json');
+  if (!existsSync(pkgPath)) return false;
+  const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+  const deps = { ...(pkg.dependencies || {}), ...(pkg.devDependencies || {}) };
+  return PKG in deps;
+}
+
+function installPackage(cwd) {
+  const pm = detectPackageManager(cwd);
+  const cmd = pm === 'npm' ? `npm install ${PKG} -D` : `${pm} add ${PKG} -D`;
+  console.log(`  Installing ${PKG}...`);
+  try {
+    execSync(cmd, { cwd, stdio: 'inherit' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function main() {
   const cwd = process.cwd();
   console.log('');
@@ -101,6 +128,15 @@ function main() {
     console.error('  X  No src/app/layout.tsx or src/app/page.tsx found.');
     console.error('     Run from the root of a Next.js App Router project.');
     process.exit(1);
+  }
+
+  if (!isPackageInstalled(cwd)) {
+    const ok = installPackage(cwd);
+    if (!ok) {
+      console.error(`  X  Failed to install ${PKG}.`);
+      console.error(`     Try manually: bun add ${PKG} -D`);
+      process.exit(1);
+    }
   }
 
   const relLayout = layout.replace(cwd + '/', '');
