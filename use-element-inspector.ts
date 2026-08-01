@@ -31,7 +31,7 @@ function getCssPath(el: HTMLElement): string {
       parts.unshift(selector);
       break;
     }
-    const parent = current.parentElement;
+    const parent: HTMLElement | null = current.parentElement;
     if (parent) {
       const siblings = Array.from(parent.children).filter(
         (c) => (c as Element).tagName === current!.tagName,

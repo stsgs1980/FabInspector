@@ -30,8 +30,6 @@ export function SelectElementFab(): React.ReactElement | null {
 
   const { isDragging, handleDragStart } = usePanelDrag(panelPos, setPanelPos);
 
-  if (!IS_DEV) return null;
-
   const shadowContent = useShadowRoot(
     <>
       <AnimatePresence>
@@ -55,6 +53,8 @@ export function SelectElementFab(): React.ReactElement | null {
       />
     </>,
   );
+
+  if (!IS_DEV) return null;
 
   return (
     <>

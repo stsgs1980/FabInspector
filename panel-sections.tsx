@@ -174,7 +174,7 @@ export function SnippetSection({
             style={vscDarkPlus}
             showLineNumbers
             startingLineNumber={snippet.snippet.startLine}
-            lineProps={(lineNumber) => ({
+            lineProps={(lineNumber: number) => ({
               style: lineNumber === snippet.snippet.highlightLine
                 ? { background: 'rgba(56, 139, 253, 0.15)', display: 'block' }
                 : { display: 'block' },

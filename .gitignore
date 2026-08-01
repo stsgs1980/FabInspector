@@ -4,3 +4,5 @@ node_modules/
 *.test.tsx
 .git/
 dist/
+package-lock.json
+.idea/

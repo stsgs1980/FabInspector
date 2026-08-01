@@ -2,7 +2,7 @@
 const inspectorConfig = [
   {
     name: 'FabInspector/rules',
-    files: ['src/components/inspector/**/*.{ts,tsx}'],
+    files: ['*.ts', '*.tsx', 'plugins/*.ts'],
     rules: {
       // Модуль должен оставаться ниже порогов Anti-Monolith (ZAI-ARCH-002)
       'max-lines': ['warn', { max: 250, skipBlankLines: true, skipComments: true }],
@@ -28,7 +28,7 @@ const inspectorConfig = [
   },
   {
     name: 'FabInspector/imports',
-    files: ['src/components/inspector/**/*.{ts,tsx}'],
+    files: ['*.ts', '*.tsx', 'plugins/*.ts'],
     rules: {
       // Модуль может импортировать только external libs
       // (проверяется при code review, здесь — предупреждение)
